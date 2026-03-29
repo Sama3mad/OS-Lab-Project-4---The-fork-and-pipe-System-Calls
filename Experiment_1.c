@@ -50,7 +50,7 @@ void experiment_fixed_nproc(int n_proc) {
     printf("N,Sequential,Parallel\n");
 
     for (int i = 1; i <= NUM_READINGS; i++) {
-        int N = i * 2500;       // edit as needed
+        int N = i * 20000;       // edit as needed
 
         generate_file(filename, N);
 
@@ -92,6 +92,6 @@ void experiment_fixed_nproc(int n_proc) {
 }
 
 int main() {
-    experiment_fixed_nproc(3);
+    experiment_fixed_nproc(9);
     return 0;
 }

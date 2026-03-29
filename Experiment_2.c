@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
-#define REPEATS 7   // odd
+#define REPEATS 23   // odd
 
 int fun(int a, int b) { return a * b; }
 
@@ -41,18 +42,24 @@ void generate_file(const char *filename, int N) {
 // Experiment 2
 void experiment_fixed_N() {
     const char *filename = "data.txt";
-    int N = 200000;
+    int N = 2000000;
 
     generate_file(filename, N);
-
     printf("n_proc,Sequential,Parallel\n");
 
-    for (int n_proc = 1; n_proc <= 16; n_proc++) {
+    for (int n_proc = 1; n_proc <= 24; n_proc++) {
         double seq_times[REPEATS];
         double par_times[REPEATS];
 
         for (int r = 0; r < REPEATS; r++) {
             double start, end;
+            
+
+            // Parallel
+            start = get_time();
+            parallel_compute(filename, n_proc, fun);
+            end = get_time();
+            par_times[r] = end - start;
 
             // Sequential
             start = get_time();
@@ -60,21 +67,19 @@ void experiment_fixed_N() {
             end = get_time();
             seq_times[r] = end - start;
 
-            // Parallel
-            start = get_time();
-            parallel_compute(filename, n_proc, fun);
-            end = get_time();
-            par_times[r] = end - start;
+
+
         }
 
-        double seq_time = median(seq_times);
-        double par_time = median(par_times);
+        double seq_ftime = median(seq_times);
+        double par_ftime = median(par_times);
 
-        printf("%d,%f,%f\n", n_proc, seq_time, par_time);
+        printf("%d,%f,%f\n", n_proc, seq_ftime, par_ftime);
     }
 }
 
 int main() {
     experiment_fixed_N();
+
     return 0;
 }
